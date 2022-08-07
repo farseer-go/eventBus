@@ -1,0 +1,4 @@
+github.com/farseer-go/fs v0.0.0-20220807091751-56d67e061446 h1:b0NgnCqBYmBPoxwDCdP0u5wVWgqMy39ZD7LTc3mQc5Y=
+github.com/farseer-go/fs v0.0.0-20220807091751-56d67e061446/go.mod h1:mg9BZsc2+UIICdjohXH6Ne5rpIZgwqDBetLlpGAnID4=
+github.com/farseer-go/linq v0.0.0-20220807112737-d735cef4871f h1:NIE59d6MNpmqhgDw8EiDBik3a3yTAT0xEd/dlzkqvSU=
+github.com/farseer-go/linq v0.0.0-20220807112737-d735cef4871f/go.mod h1:YpmSFBjwTF7OWkSEk2LNLyLF5TMFcO0fKkq+NiH5pDI=
