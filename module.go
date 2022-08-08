@@ -6,7 +6,7 @@ type Module struct {
 }
 
 func (module Module) DependsModule() []modules.FarseerModule {
-	return nil
+	return []modules.FarseerModule{modules.FarseerKernelModule{}}
 }
 
 func (module Module) PreInitialize() {
