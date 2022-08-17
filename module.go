@@ -10,6 +10,7 @@ func (module Module) DependsModule() []modules.FarseerModule {
 }
 
 func (module Module) PreInitialize() {
+	initSubscriber()
 }
 
 func (module Module) Initialize() {
