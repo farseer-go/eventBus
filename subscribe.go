@@ -9,5 +9,5 @@ type consumerFunc func(message any, ea EventArgs)
 
 // Subscribe 订阅事件
 func Subscribe(eventName string, fn consumerFunc) {
-	subscriber[eventName] = append(subscriber[eventName], fn)
+	subscriber.Add(eventName, append(subscriber.GetValue(eventName), fn))
 }

@@ -5,5 +5,4 @@ use (
 )
 replace (
     github.com/farseer-go/fs => ../fs
-    github.com/farseer-go/linq => ../linq
 )

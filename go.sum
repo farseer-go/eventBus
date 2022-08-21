@@ -1,4 +1,10 @@
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+github.com/devfeel/mapper v0.7.10 h1:XYP+IzBI3uUf/CeiGdqopFc1vcodifmvmtg/X907xdQ=
+github.com/devfeel/mapper v0.7.10/go.mod h1:foz4u16jrssGoDfnWYQGFcthjlU6uBV5UV8uYJfKneA=
+github.com/farseer-go/collections v0.0.0-20220821133845-441b110aaa5e h1:9xN0NTP/76Pgn/T6bGHT5ICAdRt+rSmc+uYK55XifVc=
+github.com/farseer-go/collections v0.0.0-20220821133845-441b110aaa5e/go.mod h1:LC5Z+NpjuWND/73Xm5iDJZPaukj1vVLxJbOPJgAawg4=
 github.com/farseer-go/fs v0.0.0-20220807091751-56d67e061446 h1:b0NgnCqBYmBPoxwDCdP0u5wVWgqMy39ZD7LTc3mQc5Y=
 github.com/farseer-go/fs v0.0.0-20220807091751-56d67e061446/go.mod h1:mg9BZsc2+UIICdjohXH6Ne5rpIZgwqDBetLlpGAnID4=
-github.com/farseer-go/linq v0.0.0-20220807112737-d735cef4871f h1:NIE59d6MNpmqhgDw8EiDBik3a3yTAT0xEd/dlzkqvSU=
-github.com/farseer-go/linq v0.0.0-20220807112737-d735cef4871f/go.mod h1:YpmSFBjwTF7OWkSEk2LNLyLF5TMFcO0fKkq+NiH5pDI=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PKk=
+gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=

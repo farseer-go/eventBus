@@ -1,8 +1,10 @@
 package eventBus
 
+import "github.com/farseer-go/collections"
+
 // 订阅者
-var subscriber map[string][]consumerFunc
+var subscriber collections.Dictionary[string, []consumerFunc]
 
 func initSubscriber() {
-	subscriber = make(map[string][]consumerFunc)
+	subscriber = collections.NewDictionary[string, []consumerFunc]()
 }
