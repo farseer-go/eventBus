@@ -1,11 +1,12 @@
 package eventBus
 
-type consumerFunc func(message any, ea EventArgs)
+import "github.com/farseer-go/collections"
 
-/*type IEventSubscribe interface {
-	// Consumer 消费
-	Consumer(message any, ea EventArgs)
-}*/
+// 订阅者
+var subscriber collections.Dictionary[string, []consumerFunc]
+
+// 订阅者的函数
+type consumerFunc func(message any, ea EventArgs)
 
 // Subscribe 订阅事件
 func Subscribe(eventName string, fn consumerFunc) {

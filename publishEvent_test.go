@@ -1,32 +1,36 @@
 package eventBus
 
 import (
-	"log"
+	"github.com/farseer-go/fs/modules"
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
-func init() {
-	Subscribe("test_event_subscribe", Consumer)
-	Subscribe("test_event_subscribe", Consumer)
-}
-
 var count int
 
 type testEventPublish struct {
-	Name string
-}
-
-func Consumer(message any, ea EventArgs) {
-	count++
-	event := message.(testEventPublish)
-	log.Println("ID=", ea.Id, "message=", event, "count=", count)
+	count int
 }
 
 func TestPublishEvent(t *testing.T) {
-	PublishEvent("test_event_subscribe", testEventPublish{Name: "aaa"})
-	log.Println("send aaa finished")
-	PublishEventAsync("test_event_subscribe", testEventPublish{Name: "bbb"})
-	log.Println("send bbb finished")
-	time.Sleep(2 * time.Second)
+	modules.StartModules(Module{})
+
+	Subscribe("test_event_subscribe", func(message any, ea EventArgs) {
+		event := message.(testEventPublish)
+		count += event.count + 1
+	})
+
+	Subscribe("test_event_subscribe", func(message any, ea EventArgs) {
+		event := message.(testEventPublish)
+		count += event.count + 2
+	})
+
+	PublishEvent("test_event_subscribe", testEventPublish{count: 6})
+	time.Sleep(10 * time.Millisecond)
+	assert.Equal(t, 15, count)
+
+	PublishEventAsync("test_event_subscribe", testEventPublish{count: 4})
+	time.Sleep(10 * time.Millisecond)
+	assert.Equal(t, 26, count)
 }
