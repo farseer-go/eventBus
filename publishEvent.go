@@ -15,8 +15,8 @@ func PublishEvent(eventName string, message any) {
 
 	// 定义事件参数
 	eventArgs := EventArgs{
-		Id:         strconv.FormatInt(time.Now().UnixMicro(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
-		CreateAt:   time.Now().UnixMicro(),
+		Id:         strconv.FormatInt(time.Now().UnixMilli(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
+		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
 	}
@@ -36,8 +36,8 @@ func PublishEventAsync(eventName string, message any) {
 
 	// 定义事件参数
 	eventArgs := EventArgs{
-		Id:         strconv.FormatInt(time.Now().UnixMicro(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
-		CreateAt:   time.Now().UnixMicro(),
+		Id:         strconv.FormatInt(time.Now().UnixMilli(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
+		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
 	}

@@ -1,7 +1,6 @@
 package eventBus
 
 import (
-	"github.com/farseer-go/fs/modules"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -14,7 +13,7 @@ type testEventPublish struct {
 }
 
 func TestPublishEvent(t *testing.T) {
-	modules.StartModules(Module{})
+	fs.Initialize[Module]("unit test")
 
 	Subscribe("test_event_subscribe", func(message any, ea EventArgs) {
 		event := message.(testEventPublish)
