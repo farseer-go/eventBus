@@ -10,7 +10,8 @@ import (
 func PublishEvent(eventName string, message any) {
 	// 首先从订阅者中找到是否存在eventName
 	if !subscriber.ContainsKey(eventName) {
-		panic("未找到事件名称：" + eventName + "，需要先通过订阅事件后，才能发布事件")
+		return
+		//panic("未找到事件名称：" + eventName + "，需要先通过订阅事件后，才能发布事件")
 	}
 
 	// 定义事件参数
