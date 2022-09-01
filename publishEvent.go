@@ -1,6 +1,8 @@
 package eventBus
 
 import (
+	"github.com/farseer-go/fs/exception"
+	"github.com/farseer-go/fs/flog"
 	"math/rand"
 	"strconv"
 	"time"
@@ -24,7 +26,12 @@ func PublishEvent(eventName string, message any) {
 
 	// 遍历订阅者，并异步执行事件消费
 	for _, subscribeFunc := range subscriber.GetValue(eventName) {
-		subscribeFunc(message, eventArgs)
+		try := exception.Try(func() {
+			subscribeFunc(message, eventArgs)
+		})
+		try.CatchException(func(exp any) {
+			flog.Error(exp)
+		})
 	}
 }
 
