@@ -3,6 +3,7 @@ package eventBus
 import (
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
+	"github.com/farseer-go/fs/stopwatch"
 	"math/rand"
 	"strconv"
 	"time"
@@ -13,7 +14,7 @@ func PublishEvent(eventName string, message any) {
 	// 首先从订阅者中找到是否存在eventName
 	if !subscriber.ContainsKey(eventName) {
 		return
-		//panic("未找到事件名称：" + eventName + "，需要先通过订阅事件后，才能发布事件")
+		flog.Warningf("需要先通过订阅事件后，才能发布事件：%s", eventName)
 	}
 
 	// 定义事件参数
@@ -27,7 +28,9 @@ func PublishEvent(eventName string, message any) {
 	// 遍历订阅者，并异步执行事件消费
 	for _, subscribeFunc := range subscriber.GetValue(eventName) {
 		try := exception.Try(func() {
+			sw := stopwatch.StartNew()
 			subscribeFunc(message, eventArgs)
+			flog.AppInfof("event", "%s，耗时：%s", eventName, sw.GetMillisecondsText())
 		})
 		try.CatchException(func(exp any) {
 			flog.Error(exp)
