@@ -30,7 +30,7 @@ func PublishEvent(eventName string, message any) {
 		try := exception.Try(func() {
 			sw := stopwatch.StartNew()
 			subscribeFunc(message, eventArgs)
-			flog.AppInfof("event", "%s，耗时：%s", eventName, sw.GetMillisecondsText())
+			flog.ComponentInfof("event", "%s，耗时：%s", eventName, sw.GetMillisecondsText())
 		})
 		try.CatchException(func(exp any) {
 			flog.Error(exp)
