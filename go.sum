@@ -59,8 +59,8 @@ github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.m
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/farseer-go/collections v0.2.0 h1:wOsZpqhnH+iZ92I1oae0rFRHsfoB+ZZJ7eCJeg+pk0s=
 github.com/farseer-go/collections v0.2.0/go.mod h1:uBAPehNOKnhqu7OQAZHv4hj7Lcz4D4JzMbDAppiCbMM=
-github.com/farseer-go/fs v0.3.0 h1:IRMYrNCybsD76r9Wo0NGO1eAhkJp287ed6pQM2qMfBE=
-github.com/farseer-go/fs v0.3.0/go.mod h1:mg9BZsc2+UIICdjohXH6Ne5rpIZgwqDBetLlpGAnID4=
+github.com/farseer-go/fs v0.4.0 h1:IRMYrNCybsD76r9Wo0NGO1eAhkJp287ed6pQM2qMfBE=
+github.com/farseer-go/fs v0.4.0/go.mod h1:mg9BZsc2+UIICdjohXH6Ne5rpIZgwqDBetLlpGAnID4=
 github.com/frankban/quicktest v1.14.3 h1:FJKSZTDHjyhriyC81FLQ0LY93eSai0ZyR/ZIkd3ZUKE=
 github.com/fsnotify/fsnotify v1.6.0 h1:n+5WquG0fcWoWp6xPWfHdbskMCQaFnG6PfBrh1Ky4HY=
 github.com/fsnotify/fsnotify v1.6.0/go.mod h1:sl3t1tCWJFWoRz9R8WJCbQihKKwmorjAbSClcnxKAGw=
