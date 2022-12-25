@@ -1,10 +1,24 @@
 # eventBus 事件总线
 > 包：`"github.com/farseer-go/eventBus"`
-
+> 
 > 模块：`eventBus.Module`
 
-> [文档：https://farseer-go.github.io/doc/](https://farseer-go.github.io/doc/)
+- `Document`
+    - [English](https://farseer-go.gitee.io/en-us/)
+    - [中文](https://farseer-go.gitee.io/)
+    - [English](https://farseer-go.github.io/doc/en-us/)
+- Source
+    - [github](https://github.com/farseer-go/fs)
 
+
+![](https://img.shields.io/github/stars/farseer-go?style=social)
+![](https://img.shields.io/github/license/farseer-go/eventBus)
+![](https://img.shields.io/github/go-mod/go-version/farseer-go/eventBus)
+![](https://img.shields.io/github/v/release/farseer-go/eventBus)
+![Codecov](https://img.shields.io/codecov/c/github/farseer-go/eventBus)
+![](https://img.shields.io/github/languages/code-size/farseer-go/eventBus)
+![](https://img.shields.io/github/directory-file-count/farseer-go/eventBus)
+![](https://goreportcard.com/badge/github.com/farseer-go/eventBus)
 
 ## 概述
 以事件驱动的方式来解耦业务逻辑，在`DDD`中，事件总线是必然用到的技术。
