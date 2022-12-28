@@ -13,8 +13,8 @@ import (
 func PublishEvent(eventName string, message any) {
 	// 首先从订阅者中找到是否存在eventName
 	if !subscriber.ContainsKey(eventName) {
-		return
 		flog.Warningf("需要先通过订阅事件后，才能发布事件：%s", eventName)
+		return
 	}
 
 	// 定义事件参数
@@ -25,7 +25,7 @@ func PublishEvent(eventName string, message any) {
 		ErrorCount: 0,
 	}
 
-	// 遍历订阅者，并异步执行事件消费
+	// 遍历订阅者，并同步执行事件消费
 	for _, subscribeFunc := range subscriber.GetValue(eventName) {
 		try := exception.Try(func() {
 			sw := stopwatch.StartNew()
@@ -55,6 +55,13 @@ func PublishEventAsync(eventName string, message any) {
 
 	// 遍历订阅者，并异步执行事件消费
 	for _, subscribeFunc := range subscriber.GetValue(eventName) {
-		go subscribeFunc(message, eventArgs)
+		go func(subscribeFunc consumerFunc) {
+			try := exception.Try(func() {
+				subscribeFunc(message, eventArgs)
+			})
+			try.CatchException(func(exp any) {
+				flog.Error(exp)
+			})
+		}(subscribeFunc)
 	}
 }
