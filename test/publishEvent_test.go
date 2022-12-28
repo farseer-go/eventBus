@@ -34,5 +34,5 @@ func TestPublishEvent(t *testing.T) {
 
 	eventBus.PublishEventAsync("test_event_subscribe", testEventPublish{count: 4})
 	time.Sleep(10 * time.Millisecond)
-	assert.Equal(t, int32(26), count)
+	assert.Equal(t, int32(26), atomic.LoadInt32(&count))
 }
