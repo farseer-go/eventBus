@@ -2,7 +2,6 @@ package test
 
 import (
 	"github.com/farseer-go/eventBus"
-	"github.com/farseer-go/fs"
 	"github.com/stretchr/testify/assert"
 	"sync/atomic"
 	"testing"
@@ -16,7 +15,6 @@ type testEventPublish struct {
 }
 
 func TestPublishEvent(t *testing.T) {
-	fs.Initialize[eventBus.Module]("unit test")
 
 	eventBus.Subscribe("test_event_subscribe", func(message any, ea eventBus.EventArgs) {
 		event := message.(testEventPublish)
@@ -28,6 +26,10 @@ func TestPublishEvent(t *testing.T) {
 		atomic.AddInt32(&count, event.count+2)
 	})
 
+	eventBus.Subscribe("test_event_subscribe", func(message any, ea eventBus.EventArgs) {
+		panic("")
+	})
+
 	eventBus.PublishEvent("test_event_subscribe", testEventPublish{count: 6})
 	time.Sleep(10 * time.Millisecond)
 	assert.Equal(t, int32(15), count)
@@ -35,4 +37,6 @@ func TestPublishEvent(t *testing.T) {
 	eventBus.PublishEventAsync("test_event_subscribe", testEventPublish{count: 4})
 	time.Sleep(10 * time.Millisecond)
 	assert.Equal(t, int32(26), atomic.LoadInt32(&count))
+
+	eventBus.Module{}.Shutdown()
 }
