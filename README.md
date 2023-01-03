@@ -17,7 +17,7 @@
 ![](https://img.shields.io/github/v/release/farseer-go/eventBus)
 [![codecov](https://img.shields.io/codecov/c/github/farseer-go/eventBus)](https://codecov.io/gh/farseer-go/eventBus)
 ![](https://img.shields.io/github/languages/code-size/farseer-go/eventBus)
-[![Build](https://github.com/farseer-go/eventBus/actions/workflows/go.yml/badge.svg)](https://github.com/farseer-go/eventBus/actions/workflows/go.yml)
+[![Build](https://github.com/farseer-go/eventBus/actions/workflows/test.yml/badge.svg)](https://github.com/farseer-go/eventBus/actions/workflows/test.yml)
 ![](https://goreportcard.com/badge/github.com/farseer-go/eventBus)
 
 ## 概述
