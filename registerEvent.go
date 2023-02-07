@@ -10,7 +10,7 @@ type registerEvent struct {
 }
 
 func (c *registerEvent) Publish(message any) {
-	_ = PublishEvent("ClientOffline", message)
+	_ = PublishEvent(c.eventName, message)
 }
 
 // RegisterEvent 注册core.IEvent实现
