@@ -1,10 +1,11 @@
 package eventBus
 
 import (
+	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
+	"github.com/farseer-go/fs/snowflake"
 	"github.com/farseer-go/fs/stopwatch"
-	"math/rand"
 	"strconv"
 	"time"
 )
@@ -17,11 +18,12 @@ func PublishEvent(eventName string, message any) error {
 	}
 
 	// 定义事件参数
-	eventArgs := EventArgs{
-		Id:         strconv.FormatInt(time.Now().UnixMilli(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
+	eventArgs := core.EventArgs{
+		Id:         strconv.FormatInt(snowflake.GenerateId(), 10),
 		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
+		EventName:  eventName,
 	}
 
 	// 遍历订阅者，并同步执行事件消费
@@ -47,11 +49,12 @@ func PublishEventAsync(eventName string, message any) error {
 	}
 
 	// 定义事件参数
-	eventArgs := EventArgs{
-		Id:         strconv.FormatInt(time.Now().UnixMilli(), 10) + strconv.Itoa(rand.Intn(999-100)+100),
+	eventArgs := core.EventArgs{
+		Id:         strconv.FormatInt(snowflake.GenerateId(), 10),
 		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
+		EventName:  eventName,
 	}
 
 	// 遍历订阅者，并异步执行事件消费

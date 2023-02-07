@@ -9,8 +9,9 @@ type registerEvent struct {
 	eventName string
 }
 
-func (c *registerEvent) Publish(message any) {
+func (c *registerEvent) Publish(message any) error {
 	_ = PublishEvent(c.eventName, message)
+	return nil
 }
 
 // RegisterEvent 注册core.IEvent实现
