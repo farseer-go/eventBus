@@ -15,7 +15,7 @@ func (c *registerEvent) Publish(message any) error {
 }
 
 // RegisterEvent 注册core.IEvent实现
-func RegisterEvent(eventName string, fns ...consumerFunc) {
+func RegisterEvent(eventName string, fns ...core.ConsumerFunc) {
 	// 注册仓储
 	container.Register(func() core.IEvent {
 		return &registerEvent{eventName: eventName}

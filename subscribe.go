@@ -6,12 +6,9 @@ import (
 )
 
 // 订阅者
-var subscriber collections.Dictionary[string, []consumerFunc]
-
-// 订阅者的函数
-type consumerFunc func(message any, ea core.EventArgs)
+var subscriber collections.Dictionary[string, []core.ConsumerFunc]
 
 // Subscribe 订阅事件
-func Subscribe(eventName string, fn consumerFunc) {
+func Subscribe(eventName string, fn core.ConsumerFunc) {
 	subscriber.Add(eventName, append(subscriber.GetValue(eventName), fn))
 }

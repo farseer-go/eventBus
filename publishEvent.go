@@ -59,7 +59,7 @@ func PublishEventAsync(eventName string, message any) error {
 
 	// 遍历订阅者，并异步执行事件消费
 	for _, subscribeFunc := range subscriber.GetValue(eventName) {
-		go func(subscribeFunc consumerFunc) {
+		go func(subscribeFunc core.ConsumerFunc) {
 			try := exception.Try(func() {
 				subscribeFunc(message, eventArgs)
 			})
