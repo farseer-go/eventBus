@@ -16,7 +16,6 @@ type testEventPublish struct {
 }
 
 func TestPublishEvent(t *testing.T) {
-
 	eventBus.Subscribe("test_event_subscribe", func(message any, ea core.EventArgs) {
 		event := message.(testEventPublish)
 		atomic.AddInt32(&count, event.count+1)
@@ -31,11 +30,11 @@ func TestPublishEvent(t *testing.T) {
 		panic("")
 	})
 
-	eventBus.PublishEvent("test_event_subscribe", testEventPublish{count: 6})
+	_ = eventBus.PublishEvent("test_event_subscribe", testEventPublish{count: 6})
 	time.Sleep(10 * time.Millisecond)
 	assert.Equal(t, int32(15), count)
 
-	eventBus.PublishEventAsync("test_event_subscribe", testEventPublish{count: 4})
+	_ = eventBus.PublishEventAsync("test_event_subscribe", testEventPublish{count: 4})
 	time.Sleep(10 * time.Millisecond)
 	assert.Equal(t, int32(26), atomic.LoadInt32(&count))
 
