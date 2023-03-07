@@ -16,12 +16,3 @@ func (module Module) DependsModule() []modules.FarseerModule {
 func (module Module) PreInitialize() {
 	subscriber = collections.NewDictionary[string, []core.ConsumerFunc]()
 }
-
-func (module Module) Initialize() {
-}
-
-func (module Module) PostInitialize() {
-}
-
-func (module Module) Shutdown() {
-}
