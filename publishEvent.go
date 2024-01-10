@@ -4,7 +4,7 @@ import (
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
-	"github.com/farseer-go/fs/snowflake"
+	"github.com/farseer-go/fs/sonyflake"
 	"github.com/farseer-go/fs/stopwatch"
 	"strconv"
 	"time"
@@ -19,7 +19,7 @@ func PublishEvent(eventName string, message any) error {
 
 	// 定义事件参数
 	eventArgs := core.EventArgs{
-		Id:         strconv.FormatInt(snowflake.GenerateId(), 10),
+		Id:         strconv.FormatInt(sonyflake.GenerateId(), 10),
 		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
@@ -50,7 +50,7 @@ func PublishEventAsync(eventName string, message any) error {
 
 	// 定义事件参数
 	eventArgs := core.EventArgs{
-		Id:         strconv.FormatInt(snowflake.GenerateId(), 10),
+		Id:         strconv.FormatInt(sonyflake.GenerateId(), 10),
 		CreateAt:   time.Now().UnixMilli(),
 		Message:    message,
 		ErrorCount: 0,
