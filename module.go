@@ -2,7 +2,6 @@ package eventBus
 
 import (
 	"github.com/farseer-go/collections"
-	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/modules"
 )
 
@@ -14,5 +13,5 @@ func (module Module) DependsModule() []modules.FarseerModule {
 }
 
 func (module Module) PreInitialize() {
-	subscriber = collections.NewDictionary[string, []core.ConsumerFunc]()
+	subscriber = collections.NewDictionary[string, []subscribeConsumer]()
 }
