@@ -14,15 +14,24 @@ func (c *registerEvent) Publish(message any) error {
 	return nil
 }
 
+type registerSubscribe struct {
+	eventName string
+}
+
 // RegisterEvent 注册core.IEvent实现
-func RegisterEvent(eventName string, fns ...core.ConsumerFunc) {
+func RegisterEvent(eventName string, fns ...subscribeConsumer) *registerSubscribe {
 	// 注册仓储
 	container.Register(func() core.IEvent {
 		return &registerEvent{eventName: eventName}
 	}, eventName)
 
-	// 同时订阅消费
-	for i := 0; i < len(fns); i++ {
-		Subscribe(eventName, fns[i])
+	return &registerSubscribe{
+		eventName: eventName,
 	}
+}
+
+// RegisterSubscribe 注册订阅者
+func (receiver *registerSubscribe) RegisterSubscribe(subscribeName string, consumerFunc core.ConsumerFunc) *registerSubscribe {
+	Subscribe(receiver.eventName, subscribeName, consumerFunc)
+	return receiver
 }

@@ -1,11 +1,13 @@
 package eventBus
 
 import (
+	"github.com/farseer-go/fs/container"
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
 	"github.com/farseer-go/fs/sonyflake"
 	"github.com/farseer-go/fs/stopwatch"
+	"github.com/farseer-go/fs/trace"
 	"strconv"
 	"time"
 )
@@ -17,6 +19,19 @@ func PublishEvent(eventName string, message any) error {
 		return flog.Errorf("需要先通过订阅事件后，才能发布事件：%s", eventName)
 	}
 
+	// 这里上下文有可能会切换，所以退出程序时，要重新设置回上下文
+	traceContext := container.Resolve[trace.IManager]().GetCurTrace()
+	if traceContext != nil {
+		defer func() {
+			trace.CurTraceContext.Set(traceContext)
+		}()
+	}
+
+	// 事件发布链路
+	var err error
+	traceDetail := container.Resolve[trace.IManager]().TraceEventPublish(eventName)
+	defer func() { traceDetail.End(err) }()
+
 	// 定义事件参数
 	eventArgs := core.EventArgs{
 		Id:         strconv.FormatInt(sonyflake.GenerateId(), 10),
@@ -27,16 +42,19 @@ func PublishEvent(eventName string, message any) error {
 	}
 
 	// 遍历订阅者，并同步执行事件消费
-	var err error
-	for _, subscribeFunc := range subscriber.GetValue(eventName) {
+	for _, s := range subscriber.GetValue(eventName) {
+		// 创建一个事件消费入口
+		eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(eventName, s.subscribeName)
 		try := exception.Try(func() {
 			sw := stopwatch.StartNew()
-			subscribeFunc(message, eventArgs)
+			s.consumerFunc(message, eventArgs)
 			flog.ComponentInfof("event", "%s，耗时：%s", eventName, sw.GetMillisecondsText())
 		})
 		try.CatchException(func(exp any) {
 			err = flog.Error(exp)
+			eventTraceContext.Error(err)
 		})
+		eventTraceContext.End()
 	}
 	return err
 }
@@ -58,15 +76,15 @@ func PublishEventAsync(eventName string, message any) error {
 	}
 
 	// 遍历订阅者，并异步执行事件消费
-	for _, subscribeFunc := range subscriber.GetValue(eventName) {
-		go func(subscribeFunc core.ConsumerFunc) {
+	for _, s := range subscriber.GetValue(eventName) {
+		go func(s subscribeConsumer) {
 			try := exception.Try(func() {
-				subscribeFunc(message, eventArgs)
+				s.consumerFunc(message, eventArgs)
 			})
 			try.CatchException(func(exp any) {
 				_ = flog.Error(exp)
 			})
-		}(subscribeFunc)
+		}(s)
 	}
 	return nil
 }

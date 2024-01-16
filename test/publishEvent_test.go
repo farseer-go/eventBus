@@ -16,17 +16,17 @@ type testEventPublish struct {
 }
 
 func TestPublishEvent(t *testing.T) {
-	eventBus.Subscribe("test_event_subscribe", func(message any, ea core.EventArgs) {
+	eventBus.Subscribe("test_event_subscribe", "test1", func(message any, ea core.EventArgs) {
 		event := message.(testEventPublish)
 		atomic.AddInt32(&count, event.count+1)
 	})
 
-	eventBus.Subscribe("test_event_subscribe", func(message any, ea core.EventArgs) {
+	eventBus.Subscribe("test_event_subscribe", "test2", func(message any, ea core.EventArgs) {
 		event := message.(testEventPublish)
 		atomic.AddInt32(&count, event.count+2)
 	})
 
-	eventBus.Subscribe("test_event_subscribe", func(message any, ea core.EventArgs) {
+	eventBus.Subscribe("test_event_subscribe", "test3", func(message any, ea core.EventArgs) {
 		panic("")
 	})
 

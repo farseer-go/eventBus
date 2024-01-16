@@ -11,9 +11,10 @@ import (
 var count1 int
 
 func TestRegisterEvent(t *testing.T) {
-	eventBus.RegisterEvent("testRegisterEvent", func(message any, ea core.EventArgs) {
-		count1 = message.(int)
-	})
+	eventBus.RegisterEvent("testRegisterEvent").
+		RegisterSubscribe("测试", func(message any, ea core.EventArgs) {
+			count1 = message.(int)
+		})
 
 	_ = container.Resolve[core.IEvent]("testRegisterEvent").Publish(3)
 
