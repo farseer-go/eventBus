@@ -19,7 +19,7 @@ type registerSubscribe struct {
 }
 
 // RegisterEvent 注册core.IEvent实现
-func RegisterEvent(eventName string, fns ...subscribeConsumer) *registerSubscribe {
+func RegisterEvent(eventName string) *registerSubscribe {
 	// 注册仓储
 	container.Register(func() core.IEvent {
 		return &registerEvent{eventName: eventName}

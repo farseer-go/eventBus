@@ -6,7 +6,6 @@ import (
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
 	"github.com/farseer-go/fs/sonyflake"
-	"github.com/farseer-go/fs/stopwatch"
 	"github.com/farseer-go/fs/trace"
 	"strconv"
 	"time"
@@ -46,9 +45,7 @@ func PublishEvent(eventName string, message any) error {
 		// 创建一个事件消费入口
 		eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(eventName, s.subscribeName)
 		try := exception.Try(func() {
-			sw := stopwatch.StartNew()
 			s.consumerFunc(message, eventArgs)
-			flog.ComponentInfof("event", "%s，耗时：%s", eventName, sw.GetMillisecondsText())
 		})
 		try.CatchException(func(exp any) {
 			err = flog.Error(exp)
