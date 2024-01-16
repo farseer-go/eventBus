@@ -1,6 +1,7 @@
 package eventBus
 
 import (
+	"fmt"
 	"github.com/farseer-go/fs/container"
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
@@ -41,9 +42,10 @@ func PublishEvent(eventName string, message any) error {
 	}
 
 	// 遍历订阅者，并同步执行事件消费
+	server := fmt.Sprintf("本地Event/%s/%s/%v", core.AppName, core.AppIp, core.AppId)
 	for _, s := range subscriber.GetValue(eventName) {
 		// 创建一个事件消费入口
-		eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(eventName, s.subscribeName)
+		eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
 		try := exception.Try(func() {
 			s.consumerFunc(message, eventArgs)
 		})
