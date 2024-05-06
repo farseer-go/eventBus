@@ -20,8 +20,7 @@ func PublishEvent(eventName string, message any) error {
 	}
 
 	// 这里上下文有可能会切换，所以退出程序时，要重新设置回上下文
-	traceContext := container.Resolve[trace.IManager]().GetCurTrace()
-	if traceContext != nil {
+	if traceContext := container.Resolve[trace.IManager]().GetCurTrace(); traceContext != nil {
 		defer func() {
 			trace.CurTraceContext.Set(traceContext)
 		}()
@@ -75,14 +74,19 @@ func PublishEventAsync(eventName string, message any) error {
 	}
 
 	// 遍历订阅者，并异步执行事件消费
+	server := fmt.Sprintf("本地Event/%s/%s/%v", core.AppName, core.AppIp, core.AppId)
 	for _, s := range subscriber.GetValue(eventName) {
 		go func(s subscribeConsumer) {
+			// 创建一个事件消费入口
+			eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
 			try := exception.Try(func() {
 				s.consumerFunc(message, eventArgs)
 			})
 			try.CatchException(func(exp any) {
-				_ = flog.Error(exp)
+				err := flog.Error(exp)
+				eventTraceContext.Error(err)
 			})
+			eventTraceContext.End()
 		}(s)
 	}
 	return nil
