@@ -10,8 +10,11 @@ type registerEvent struct {
 }
 
 func (c *registerEvent) Publish(message any) error {
-	_ = PublishEvent(c.eventName, message)
-	return nil
+	return PublishEvent(c.eventName, message)
+}
+
+func (c *registerEvent) PublishAsync(message any) {
+	_ = PublishEventAsync(c.eventName, message)
 }
 
 type registerSubscribe struct {
