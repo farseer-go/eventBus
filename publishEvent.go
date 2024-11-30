@@ -2,14 +2,15 @@ package eventBus
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/farseer-go/fs/container"
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
 	"github.com/farseer-go/fs/sonyflake"
 	"github.com/farseer-go/fs/trace"
-	"strconv"
-	"time"
 )
 
 // PublishEvent 阻塞发布事件
@@ -20,7 +21,7 @@ func PublishEvent(eventName string, message any) error {
 	}
 
 	// 这里上下文有可能会切换，所以退出程序时，要重新设置回上下文
-	if traceContext := container.Resolve[trace.IManager]().GetCurTrace(); traceContext != nil {
+	if traceContext := trace.CurTraceContext.Get(); traceContext != nil {
 		defer func() {
 			trace.CurTraceContext.Set(traceContext)
 		}()
@@ -51,7 +52,7 @@ func PublishEvent(eventName string, message any) error {
 		try.CatchException(func(exp any) {
 			err = flog.Error(exp)
 		})
-		eventTraceContext.End(err)
+		container.Resolve[trace.IManager]().Push(eventTraceContext, err)
 	}
 	return err
 }
@@ -85,7 +86,7 @@ func PublishEventAsync(eventName string, message any) error {
 			try.CatchException(func(exp any) {
 				err = flog.Error(exp)
 			})
-			eventTraceContext.End(err)
+			container.Resolve[trace.IManager]().Push(eventTraceContext, err)
 		}(s)
 	}
 	return nil
