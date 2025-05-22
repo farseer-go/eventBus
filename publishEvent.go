@@ -50,9 +50,9 @@ func PublishEvent(eventName string, message any) error {
 			s.consumerFunc(message, eventArgs)
 		})
 		try.CatchException(func(exp any) {
-			err = flog.Error(exp)
+			err = fmt.Errorf("%v", exp)
 		})
-		container.Resolve[trace.IManager]().Push(eventTraceContext, err)
+		container.Resolve[trace.IManager]().Push(eventTraceContext, nil)
 	}
 	return err
 }
@@ -77,16 +77,12 @@ func PublishEventAsync(eventName string, message any) error {
 	server := fmt.Sprintf("本地Event/%s/%s/%v", core.AppName, core.AppIp, core.AppId)
 	for _, s := range subscriber.GetValue(eventName) {
 		go func(s subscribeConsumer) {
-			var err error
 			// 创建一个事件消费入口
 			eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
-			try := exception.Try(func() {
+			exception.Try(func() {
 				s.consumerFunc(message, eventArgs)
 			})
-			try.CatchException(func(exp any) {
-				err = flog.Error(exp)
-			})
-			container.Resolve[trace.IManager]().Push(eventTraceContext, err)
+			container.Resolve[trace.IManager]().Push(eventTraceContext, nil)
 		}(s)
 	}
 	return nil
