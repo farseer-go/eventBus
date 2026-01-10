@@ -20,8 +20,9 @@ func PublishEvent(eventName string, message any) error {
 		return flog.Errorf("需要先通过订阅事件后，才能发布事件：%s", eventName)
 	}
 
+	traceManager := container.Resolve[trace.IManager]()
 	// 这里上下文有可能会切换，所以退出程序时，要重新设置回上下文
-	if traceContext := trace.CurTraceContext.Get(); traceContext != nil {
+	if traceContext, exists := traceManager.GetTraceContext(); exists {
 		defer func() {
 			trace.CurTraceContext.Set(traceContext)
 		}()
@@ -29,7 +30,7 @@ func PublishEvent(eventName string, message any) error {
 
 	// 事件发布链路
 	var err error
-	traceDetail := container.Resolve[trace.IManager]().TraceEventPublish(eventName)
+	traceDetail := traceManager.TraceEventPublish(eventName)
 	defer func() { traceDetail.End(err) }()
 
 	// 定义事件参数
@@ -45,14 +46,14 @@ func PublishEvent(eventName string, message any) error {
 	server := fmt.Sprintf("本地Event/%s/%s/%v", core.AppName, core.AppIp, core.AppId)
 	for _, s := range subscriber.GetValue(eventName) {
 		// 创建一个事件消费入口
-		eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
+		eventTraceContext := traceManager.EntryEventConsumer(server, eventName, s.subscribeName)
 		try := exception.Try(func() {
 			s.consumerFunc(message, eventArgs)
 		})
 		try.CatchException(func(exp any) {
 			err = fmt.Errorf("%v", exp)
 		})
-		container.Resolve[trace.IManager]().Push(eventTraceContext, nil)
+		traceManager.Push(eventTraceContext, nil)
 	}
 	return err
 }
