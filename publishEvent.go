@@ -3,8 +3,10 @@ package eventBus
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/farseer-go/fs/color"
 	"github.com/farseer-go/fs/container"
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
@@ -51,7 +53,11 @@ func PublishEvent(eventName string, message any) error {
 			s.consumerFunc(message, eventArgs)
 		}).CatchException(func(exp any) {
 			if traceContext.IsIgnore() { // 如果忽略了链路,则要在这里打印错误日志
-				flog.Errorf("%s,%s 异常: %v", server, eventName, exp)
+				lstLogs := []string{fmt.Sprintf("%s,%s 异常: %v", server, eventName, exp)}
+				for index, exceptionStackDetail := range trace.GetCallerInfo() {
+					lstLogs = append(lstLogs, fmt.Sprintf("\t%d、%s:%s %s", index+1, exceptionStackDetail.ExceptionCallFile, color.Yellow(exceptionStackDetail.ExceptionCallLine), color.Red(exceptionStackDetail.ExceptionCallFuncName)))
+				}
+				flog.Error(strings.Join(lstLogs, "\n") + "\n")
 			}
 		})
 		traceManager.Push(traceContext, nil)
@@ -85,7 +91,11 @@ func PublishEventAsync(eventName string, message any) error {
 				s.consumerFunc(message, eventArgs)
 			}).CatchException(func(exp any) {
 				if traceContext.IsIgnore() { // 如果忽略了链路,则要在这里打印错误日志
-					flog.Errorf("%s,%s 异常: %v", server, eventName, exp)
+					lstLogs := []string{fmt.Sprintf("%s,%s 异常: %v", server, eventName, exp)}
+					for index, exceptionStackDetail := range trace.GetCallerInfo() {
+						lstLogs = append(lstLogs, fmt.Sprintf("\t%d、%s:%s %s", index+1, exceptionStackDetail.ExceptionCallFile, color.Yellow(exceptionStackDetail.ExceptionCallLine), color.Red(exceptionStackDetail.ExceptionCallFuncName)))
+					}
+					flog.Error(strings.Join(lstLogs, "\n") + "\n")
 				}
 			})
 			container.Resolve[trace.IManager]().Push(traceContext, nil)
