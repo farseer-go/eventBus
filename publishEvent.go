@@ -46,14 +46,15 @@ func PublishEvent(eventName string, message any) error {
 	server := fmt.Sprintf("本地Event/%s/%s/%v", core.AppName, core.AppIp, core.AppId)
 	for _, s := range subscriber.GetValue(eventName) {
 		// 创建一个事件消费入口
-		eventTraceContext := traceManager.EntryEventConsumer(server, eventName, s.subscribeName)
-		try := exception.Try(func() {
+		traceContext := traceManager.EntryEventConsumer(server, eventName, s.subscribeName)
+		exception.Try(func() {
 			s.consumerFunc(message, eventArgs)
+		}).CatchException(func(exp any) {
+			if traceContext.IsIgnore() { // 如果忽略了链路,则要在这里打印错误日志
+				flog.Errorf("%s,%s 异常: %v", server, eventName, exp)
+			}
 		})
-		try.CatchException(func(exp any) {
-			err = fmt.Errorf("%v", exp)
-		})
-		traceManager.Push(eventTraceContext, nil)
+		traceManager.Push(traceContext, nil)
 	}
 	return err
 }
@@ -79,11 +80,15 @@ func PublishEventAsync(eventName string, message any) error {
 	for _, s := range subscriber.GetValue(eventName) {
 		go func(s subscribeConsumer) {
 			// 创建一个事件消费入口
-			eventTraceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
+			traceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
 			exception.Try(func() {
 				s.consumerFunc(message, eventArgs)
+			}).CatchException(func(exp any) {
+				if traceContext.IsIgnore() { // 如果忽略了链路,则要在这里打印错误日志
+					flog.Errorf("%s,%s 异常: %v", server, eventName, exp)
+				}
 			})
-			container.Resolve[trace.IManager]().Push(eventTraceContext, nil)
+			container.Resolve[trace.IManager]().Push(traceContext, nil)
 		}(s)
 	}
 	return nil
