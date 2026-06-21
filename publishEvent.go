@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/farseer-go/fs/color"
-	"github.com/farseer-go/fs/container"
 	"github.com/farseer-go/fs/core"
 	"github.com/farseer-go/fs/exception"
 	"github.com/farseer-go/fs/flog"
@@ -22,7 +21,7 @@ func PublishEvent(eventName string, message any) error {
 		return flog.Errorf("需要先通过订阅事件后，才能发布事件：%s", eventName)
 	}
 
-	traceManager := container.Resolve[trace.IManager]()
+	traceManager := trace.Manager()
 	// 这里上下文有可能会切换，所以退出程序时，要重新设置回上下文
 	if traceContext, exists := traceManager.GetTraceContext(); exists {
 		defer func() {
@@ -86,7 +85,7 @@ func PublishEventAsync(eventName string, message any) error {
 	for _, s := range subscriber.GetValue(eventName) {
 		go func(s subscribeConsumer) {
 			// 创建一个事件消费入口
-			traceContext := container.Resolve[trace.IManager]().EntryEventConsumer(server, eventName, s.subscribeName)
+			traceContext := trace.Manager().EntryEventConsumer(server, eventName, s.subscribeName)
 			exception.Try(func() {
 				s.consumerFunc(message, eventArgs)
 			}).CatchException(func(exp any) {
@@ -98,7 +97,7 @@ func PublishEventAsync(eventName string, message any) error {
 					flog.Error(strings.Join(lstLogs, "\n") + "\n")
 				}
 			})
-			container.Resolve[trace.IManager]().Push(traceContext, nil)
+			trace.Manager().Push(traceContext, nil)
 		}(s)
 	}
 	return nil
